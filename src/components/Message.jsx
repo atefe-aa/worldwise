@@ -1,9 +1,11 @@
-function Message() {
+import styles from "./Message.module.css";
+
+function Message({ message }) {
   return (
-    <div>
-      
-    </div>
-  )
+    <p className={styles.message}>
+      <span role="img">👋</span> {message}
+    </p>
+  );
 }
 
-export default Message
+export default Message;
