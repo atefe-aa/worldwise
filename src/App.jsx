@@ -5,16 +5,15 @@ import Pricing from "./pages/Pricing";
 import PageNotFound from "./pages/PageNotFound";
 import AppLayout from "./pages/AppLayout";
 
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route to={"/"} element={<Homepage />} />
-        <Route to={"/product"} element={<Product />} />
-        <Route to={"/pricing"} element={<Pricing />} />
-        <Route to={"*"} element={<PageNotFound />} />
-        <Route to={"/app"} element={<AppLayout />} />
+        <Route path="/" element={<Homepage />} />
+        <Route path="product" element={<Product />} />
+        <Route path="pricing" element={<Pricing />} />
+        <Route path="*" element={<PageNotFound />} />
+        <Route path="app" element={<AppLayout />} />
       </Routes>
     </BrowserRouter>
   );
