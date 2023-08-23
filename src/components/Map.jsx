@@ -7,7 +7,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import styles from "./Map.module.css";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useCities from "../Hooks/useCities";
 import { useGeolocation } from "../Hooks/useGeolocation";
