@@ -10,6 +10,7 @@ import Spinner from "./Spinner";
 import Message from "./Message";
 import { useURLPosition } from "../Hooks/useURLPosition";
 import useCities from "../Hooks/useCities";
+import { useNavigate } from "react-router-dom";
 
 function convertToEmoji(countryCode) {
   const codePoints = countryCode
@@ -72,7 +73,9 @@ export function Form() {
     dispatch,
   ] = useReducer(reducer, initialState);
   const [lat, lng] = useURLPosition();
-const {addCity} = useCities();
+  const { addCity, isLoading } = useCities();
+  const navigate = useNavigate();
+
   useEffect(
     function () {
       async function fetchCityData() {
@@ -100,7 +103,7 @@ const {addCity} = useCities();
     [lat, lng]
   );
 
-  function handleAddCity(e) {
+  async function handleAddCity(e) {
     e.preventDefault();
 
     if (!cityName || !date) return;
@@ -117,14 +120,18 @@ const {addCity} = useCities();
       },
     };
 
-    addCity(newCity);
+    await addCity(newCity);
+    navigate("/app/cities");
   }
 
   if (!lat || !lng) return <Message message="Start by clicking on the map!" />;
   if (isLoadingGeocodding) return <Spinner />;
   if (geocoddingError) return <Message message={geocoddingError} />;
   return (
-    <form className={styles.form} onSubmit={handleAddCity}>
+    <form
+      className={`${styles.form} ${isLoading ? styles.loading : ""}`}
+      onSubmit={handleAddCity}
+    >
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input
