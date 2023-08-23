@@ -6,6 +6,8 @@ import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 
+const BASE_URL = "http://localhost/API";
+
 export default function Login() {
   // PRE-FILL FOR DEV PURPOSES
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ export default function Login() {
   async function signup(newUser) {
     try {
       setIsLoading(true);
-      const res = await fetch("http://localhost/API/signup.php", {
+      const res = await fetch(`${BASE_URL}/signup.php`, {
         method: "POST",
         headers: { "Content-Type": "aplication/json" },
         body: JSON.stringify(newUser),

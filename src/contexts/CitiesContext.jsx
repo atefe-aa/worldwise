@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "http://localhost/API";
 
 const CitiesContext = createContext();
 
@@ -13,9 +13,13 @@ function CitiesProvider({ children }) {
     async function fetchCities() {
       try {
         setIsLoading(true);
-        const res = await fetch(`${BASE_URL}/cities`);
+        const res = await fetch(`${BASE_URL}/cities.php`, {
+          method: "POST",
+          headers: { "Content-Type": "aplication/json" },
+        });
         const data = await res.json();
-        setCities(data);
+       
+        setCities(data.cities);
       } catch {
         alert("Something is wrong with fetching data!");
       } finally {
@@ -25,18 +29,41 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
-async function getCity(id){
+  async function getCity(id) {
     try {
-        setIsLoading(true);
-        const res = await fetch(`${BASE_URL}/cities/${id}`);
-        const data = await res.json();
-        setCurrentCity(data);
-      } catch {
-        alert("Something is wrong with fetching data!");
-      } finally {
-        setIsLoading(false);
-      }
-}
+      setIsLoading(true);
+      const res = await fetch(`${BASE_URL}/cities.php`, {
+        method: "POST",
+        headers: { "Content-Type": "aplication/json" },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      setCurrentCity(data.cities.at(0));
+     
+    } catch {
+      alert("Something is wrong with fetching data!");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function addCity(newCity) {
+    
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${BASE_URL}/addCity.php`, {
+        method: "POST",
+        headers: { "Content-Type": "aplication/json" },
+        body: JSON.stringify(newCity),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch {
+      alert("Something is wrong with fetching data!");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <CitiesContext.Provider
@@ -44,7 +71,8 @@ async function getCity(id){
         cities,
         isLoading,
         currentCity,
-        getCity
+        getCity,
+        addCity,
       }}
     >
       {children}
@@ -52,6 +80,4 @@ async function getCity(id){
   );
 }
 
-
-
-export { CitiesProvider,CitiesContext};
+export { CitiesProvider, CitiesContext };
