@@ -30,7 +30,7 @@ async function login(loginUser) {
     setIsLoading(true);
     const res = await fetch(`${BASE_URL}/login.php`, {
       method: "POST",
-      headers: { "Content-Type": "aplication/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(loginUser),
     });
     const data = await res.json();

@@ -31,7 +31,7 @@ export default function Login() {
       setIsLoading(true);
       const res = await fetch(`${BASE_URL}/signup.php`, {
         method: "POST",
-        headers: { "Content-Type": "aplication/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newUser),
       });
       const data = await res.json();
