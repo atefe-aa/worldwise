@@ -1,54 +1,57 @@
 import styles from "./Login.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "../Hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 import PageNav from "../components/PageNav";
 import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 
-const BASE_URL = "http://localhost/API";
-
-export default function Login() {
+export default function Signup() {
   // PRE-FILL FOR DEV PURPOSES
+
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { signup, isLoading, error, isSignedup } = useAuth();
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
   function handleSignup(event) {
     event.preventDefault();
     const newUser = {
+      name,
       email,
       password,
       passwordConfirm,
     };
     signup(newUser);
   }
-  async function signup(newUser) {
-    try {
-      setIsLoading(true);
-      const res = await fetch(`${BASE_URL}/signup.php`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
-      });
-      const data = await res.json();
-      if (data.error) setError(data.error);
-      if (data.success) navigate("/login");
-    } catch {
-      setError("Something is wrong with fetching data!");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+
+  useEffect(
+    function () {
+      if (isSignedup) navigate("/login", {replace: true});
+    },
+    [isSignedup, navigate]
+  );
 
   return (
     <main className={styles.login} onSubmit={handleSignup}>
       <PageNav />
       <form className={styles.form}>
-      {error ? <Message message={error} /> : null}
+        {error ? <Message message={error} /> : null}
+        <div className={styles.row}>
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            placeholder="Name"
+            required
+          />
+        </div>
+
         <div className={styles.row}>
           <label htmlFor="email">Email address</label>
           <input
@@ -57,6 +60,7 @@ export default function Login() {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             placeholder="email@email.com"
+            required
           />
         </div>
 
@@ -68,17 +72,19 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             placeholder="Password"
+            required
           />
         </div>
 
         <div className={styles.row}>
-          <label htmlFor="passwordConfirm">Password</label>
+          <label htmlFor="passwordConfirm">Confirm Password</label>
           <input
             type="password"
             id="passwordConfirm"
             onChange={(e) => setPasswordConfirm(e.target.value)}
             value={passwordConfirm}
             placeholder="Confirm Password"
+            required
           />
         </div>
 

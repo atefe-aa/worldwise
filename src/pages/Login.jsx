@@ -1,53 +1,40 @@
 import styles from "./Login.module.css";
-import { useState } from "react";
-
-import PageNav from "../components/PageNav"
-import Button from "../components/Button";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Message from "../components/Message";
+import { useAuth } from "../Hooks/useAuth";
 
-const BASE_URL = "http://localhost/API";
+import PageNav from "../components/PageNav";
+import Button from "../components/Button";
+import Message from "../components/Message";
 
 export default function Login() {
   // PRE-FILL FOR DEV PURPOSES
+  const { isLoading, error, login, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
-
-function handleLogin(e){
-  e.preventDefault();
-  const loginUser = {
-    email,
-    password,
-  };
-  login(loginUser);
-}
-async function login(loginUser) {
-  try {
-    setIsLoading(true);
-    const res = await fetch(`${BASE_URL}/login.php`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(loginUser),
-    });
-    const data = await res.json();
-    if (data.error) setError(data.error);
-    if (data.success) navigate("/app");
-  } catch {
-    setError("Something is wrong with fetching data!");
-  } finally {
-    setIsLoading(false);
+  function handleLogin(e) {
+    e.preventDefault();
+    const loginUser = {
+      email,
+      password,
+    };
+    login(loginUser);
   }
-}
+
+  useEffect(
+    function () {
+      if (isAuthenticated) navigate("/app", {replace: true});
+    },
+    [isAuthenticated, navigate]
+  );
 
   return (
-    <main className={styles.login} >
+    <main className={styles.login}>
       <PageNav />
       <form className={styles.form} onSubmit={handleLogin}>
-      {error ? <Message message={error} /> : null}
+        {error ? <Message message={error} /> : null}
         <div className={styles.row}>
           <label htmlFor="email">Email address</label>
           <input
@@ -56,6 +43,7 @@ async function login(loginUser) {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             placeholder="Email"
+            required
           />
         </div>
 
@@ -67,6 +55,7 @@ async function login(loginUser) {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             placeholder="Password"
+            required
           />
         </div>
 
