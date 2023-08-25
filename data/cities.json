@@ -35,6 +35,15 @@
         "lng": 13.376933665713324
       },
       "id": 98443197
+    },
+    {
+      "cityName": "Las Parras de Castellote",
+      "country": "Spain",
+      "date": "2023-08-25T06:03:01.765Z",
+      "emoji": "\ud83c\uddea\ud83c\uddf8",
+      "notes": "",
+      "position": { "lat": 40.79717741518769, "lng": -0.24169921875000003 },
+      "id": 42
     }
   ]
 }
